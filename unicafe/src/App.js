@@ -14,17 +14,37 @@ const App = () => {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
+  const [average, setAverage] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [positive, setPositive] = useState(0);
 
   const handleValueChange = (vote) => {
+    let newGood = good;
+    let newBad = bad;
+    let newNeutral = neutral;
     return () => {
       if (vote === "good") {
-        setGood(good + 1);
+        newGood++;
+        setGood(newGood);
       } else if (vote === "neutral") {
-        setNeutral(neutral + 1);
+        newNeutral++;
+        setNeutral(newNeutral);
       } else if (vote === "bad") {
-        setBad(bad + 1);
+        newBad++;
+        setBad(newBad);
       }
+      calculateExtraStatistics(newGood, newNeutral, newBad);
     };
+  };
+
+  const calculateExtraStatistics = (newGood, newNeutral, newBad) => {
+    const newTotal = newGood + newBad + newNeutral;
+    const newAverage = (newGood * 1 + newNeutral * 0 + newBad * -1) / newTotal;
+    const positiveFeedbackPercentage = (newGood / newTotal) * 100;
+    setTotal(newTotal);
+    setAverage(newAverage);
+    setPositive(positiveFeedbackPercentage);
+    console.log(newTotal);
   };
 
   return (
@@ -43,6 +63,9 @@ const App = () => {
         <Result text={"Good"} value={good} />
         <Result text={"Neutral"} value={neutral} />
         <Result text={"Bad"} value={bad} />
+        <div>all {total}</div>
+        <div>average {average}</div>
+        <div>positive {positive} %</div>
       </div>
     </div>
   );
